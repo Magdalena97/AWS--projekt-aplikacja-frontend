@@ -21,7 +21,8 @@
 import ImageObject from './ImageObject';
 
 const {
-    VUE_APP_S3_BUCKET_NAME
+    VUE_APP_S3_BUCKET_NAME,
+    VUE_APP_CURRENT_URL
 } = process.env
 
 export default {
@@ -47,7 +48,7 @@ export default {
         submit() {//reakcje na iterakcje z uzytkowniimem jak uztrkownik nacisnie przcisk wysljj ZIELONY WYSLIJ
             if (this.file) { 
                 var self = this
-                fetch('http://localhost:3000/getPresignedPost')// wysylam zapytanie s=do serear by dał mi sygnatury
+                fetch(VUE_APP_CURRENT_URL+'getPresignedPost')// wysylam zapytanie s=do serear by dał mi sygnatury
                 .then(response => response.json())//jak odbrze sygnatury
                 .then((data) => { //to jest ta moja odpiwdz z serera z sygnatura
                         const formData = new FormData();// dostała juz synature i musze plik wysłac do s3
@@ -90,7 +91,7 @@ export default {
             
             var data = new FormData();
             data.append("json", JSON.stringify(selected.map(item => item.Key)));
-            fetch("http://localhost:3000/sendMessages",//koljen zapytanie do serera 
+            fetch(VUE_APP_CURRENT_URL+"sendMessages",//koljen zapytanie do serera 
             {
                 method: "POST",
                 body: JSON.stringify(selected.map(item => item.Key)),
@@ -116,7 +117,7 @@ export default {
             var self = this;
             (async function() {
                 self.loadingUpdateButton = true;
-                const response = fetch('http://localhost:3000/listOfObjects')// wysyłam zapytanie do serera by sciagnal liste plikow z s3
+                const response = fetch(VUE_APP_CURRENT_URL+'listOfObjects')// wysyłam zapytanie do serera by sciagnal liste plikow z s3
                 .then(response => response.json())
                 .then((data) => {
                     self.loadingUpdateButton = false;
